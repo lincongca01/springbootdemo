@@ -7,10 +7,17 @@ node {
     }
 
     stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-        app = docker.build("lincongca01/springboot-demo")
+        steps {
+            withMaven(
+              maven: 'M3'
+              jdk: '8' {
+                sh mvn clean install
+              }
+            )
+            
+            /* This builds the actual image; synonymous to
+            * docker build on the command line */
+            app = docker.build("lincongca01/springboot-demo")
     }
 
     stage('Test image') {

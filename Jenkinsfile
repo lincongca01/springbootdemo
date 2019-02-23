@@ -10,7 +10,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("incongca01/springboot-demo")
+        app = docker.build("lincongca01/springboot-demo")
     }
 
     stage('Test image') {

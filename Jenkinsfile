@@ -9,10 +9,9 @@ node {
     stage('Build image') {
         withMaven(
           maven: 'M3',
-          jdk: 'jdk8-latest' {
+          jdk: 'jdk8-latest') {
             sh mvn clean install
-          }
-        )
+        }
         
         /* This builds the actual image; synonymous to
         * docker build on the command line */

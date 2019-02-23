@@ -9,8 +9,8 @@ node {
     stage('Build image') {
         steps {
             withMaven(
-              maven: 'M3'
-              jdk: '8' {
+              maven: 'M3',
+              jdk: 'jdk8-latest' {
                 sh mvn clean install
               }
             )

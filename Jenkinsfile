@@ -15,7 +15,10 @@ node {
         
         /* This builds the actual image; synonymous to
         * docker build on the command line */
+        withEnv(['MSYS_NO_PATHCONV=1']) {
+            sh 'echo $MSYS_NO_PATHCONV'
         app = docker.build("lincongca01/springboot-demo")
+        }
     }
 
     stage('Test image') {

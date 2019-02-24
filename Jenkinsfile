@@ -9,16 +9,13 @@ node {
     stage('Build image') {
         withMaven(
           maven: 'M3',
-          jdk: 'jdk8-latest') {
+          jdk: 'jdk-latest') {
             sh "mvn clean install"
         }
         
         /* This builds the actual image; synonymous to
         * docker build on the command line */
-        withEnv(['MSYS_NO_PATHCONV=1']) {
-            sh 'echo $MSYS_NO_PATHCONV'
         app = docker.build("lincongca01/springboot-demo")
-        }
     }
 
     stage('Test image') {

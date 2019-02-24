@@ -10,7 +10,7 @@ node {
         withMaven(
           maven: 'M3',
           jdk: 'jdk8-latest') {
-            sh mvn clean install
+            sh "mvn clean install"
         }
         
         /* This builds the actual image; synonymous to

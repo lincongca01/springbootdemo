@@ -1,6 +1,8 @@
 node {
     def REGISTRY = "lincongca01/springboot-demo"
     def BUILD_NUMBER = "latest"
+    def CONTAINER_NAME = "demo-app"
+    def PORT = "8081"
     def app
 
     stage('Clone repository') {
@@ -24,7 +26,34 @@ node {
         /* Ideally, we would run a test framework against our image.
          * For this example, we're using a Volkswagen-type approach ;-) */
         app.inside {
-            sh 'echo Test (dummy) passed.'
+            try {
+                sh ```
+                    docker run -d --name $CONTAINER_NAME -p $PORT:$PORT $REGISTRY:$BUILD_NUMBER
+                    docker_host_ip = `docker-machine.exe ip win-docker-host`
+                    res = `curl http://${docker_host_ip}:$PORT/api/hello`
+                    echo "${res: -1}"
+                    if ["1" == "${res: -1}"]; then
+                        'exit 0'
+                    else
+                        'exit 1'
+                    fi
+                ```
+            }
+            catch (exc) {
+                echo 'Something failed, I should sound the klaxons!'
+                throw
+            }
+        }
+        post {
+            always {
+                sh ```
+                    docker stop $CONTAINER_NAME
+                    docker rm $CONTAINER_NAME
+                ```
+            }
+            failure {
+                sh "docker rmi $REGISTRY:$BUILD_NUMBER"
+            }
         }
     }
 

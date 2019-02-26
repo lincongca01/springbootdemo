@@ -1,4 +1,6 @@
 node {
+    def REGISTRY = "lincongca01/springboot-demo"
+    def BUILD_NUMBER = "latest"
     def app
 
     stage('Clone repository') {
@@ -15,7 +17,7 @@ node {
         
         /* This builds the actual image; synonymous to
         * docker build on the command line */
-        app = docker.build("lincongca01/springboot-demo")
+        app = docker.build(REGISTRY)
     }
 
     stage('Test image') {
@@ -29,8 +31,13 @@ node {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+            app.push("BUILD_NUMBER")
         }
+    }
+
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
     }
 }

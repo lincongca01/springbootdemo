@@ -1,8 +1,6 @@
 node {
     def REGISTRY = "lincongca01/springboot-demo"
     def BUILD_NUMBER = "latest"
-    def CONTAINER_NAME = "demo-app"
-    def PORT = "8081"
     def app
 
     stage('Clone repository') {
@@ -21,12 +19,14 @@ node {
         * docker build on the command line */
         app = docker.build(REGISTRY)
     }
+    stage('Test image') {
+        app.withRun('-p 8081:8080 --name demo-app') {
+            def res = sh(script: 'while ! curl http://192.168.99.100:8081/api/hello; do sleep 1; done', returnStdout: true)
+            sh "echo $res"
+        }
+    }
 
     stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
         docker.withRegistry('', 'docker-hub-credentials') {
             app.push(BUILD_NUMBER)
         }

@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,20 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/hello")
 public class HelloController {
 
-    private static final String RESPONSE_STRING_FORMAT = "Hello from '%s': %d";
+  private static final String RESPONSE_STRING_FORMAT = "Hello from '%s': %d";
 
-    /**
-     * Counter to help us see the lifecycle
-     */
-    private int count = 0;
+  /**
+   * Counter to help us see the lifecycle
+   */
+  public AtomicInteger incrementer = new AtomicInteger (0);
 
-
-    @GetMapping
-    public String helloworld(){
-        count++;
-        return String.format(
-                RESPONSE_STRING_FORMAT,
-                System.getenv().getOrDefault("HOSTNAME", "unknown"),
-                count);
-    }
+  @GetMapping
+  public String helloworld(){
+    return String.format(
+        RESPONSE_STRING_FORMAT,
+        System.getenv().getOrDefault("HOSTNAME", "unknown"),
+        incrementer.incrementAndGet());
+  }
 }

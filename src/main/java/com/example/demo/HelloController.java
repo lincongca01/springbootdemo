@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ public class HelloController {
   /**
    * Counter to help us see the lifecycle
    */
-  public AtomicInteger incrementer = new AtomicInteger (0);
+  private AtomicLong incrementer = new AtomicLong(0);
 
   @GetMapping
   public String helloworld(){

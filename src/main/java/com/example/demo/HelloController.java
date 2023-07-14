@@ -15,7 +15,7 @@ public class HelloController {
   /**
    * Counter to help us see the lifecycle
    */
-  private AtomicLong incrementer = new AtomicLong(0);
+  private final AtomicLong incrementer = new AtomicLong(0);
 
   @GetMapping
   public String helloworld(){
